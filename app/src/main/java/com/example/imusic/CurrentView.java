@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -13,18 +15,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class CurrentView extends AppCompatActivity {
 
-    static TextView currentViewName;
-    static ImageView currentViewImage;
+    TextView currentViewName;
+    ImageView currentViewImage;
     ImageView currentViewPrev;
     ImageView currentViewPlayPause;
     ImageView currentViewNext;
-    static SeekBar currentViewSeekBar;
-    MyPlayer myPlayer;
-    Song currSongPlaying;
+    SeekBar currentViewSeekBar;
+    MediaPlayer mediaPlayer;
+
     Thread updateSeekBar;
+
+    ArrayList<Song> mySongs;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -38,16 +43,19 @@ public class CurrentView extends AppCompatActivity {
         currentViewName = findViewById(R.id.currentViewName);
         currentViewSeekBar = findViewById(R.id.currentViewSeekBar);
 
+        mediaPlayer = MyPlayer.mediaPlayer;
+        mySongs = MainActivity.mySongs;
+
+
         Intent intent = getIntent();
         int currentSongPosition = intent.getIntExtra("playingPosition", 0);
-        myPlayer = new MyPlayer(getApplicationContext());
 
-        currSongPlaying = myPlayer.getAll_MP3_Files().get(currentSongPosition);
 
-        currentViewImage.setImageBitmap(currSongPlaying.getImage());
-        currentViewName.setText(currSongPlaying.getName());
+        Log.d("indexing", "recieving " + currentSongPosition);
 
-        currentViewSeekBar.setMax(MyPlayer.mediaPlayer.getDuration());
+        updateUI(MyPlayer.currSongPlaying);
+
+
         currentViewSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -69,11 +77,7 @@ public class CurrentView extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    myPlayer.nextSong();
-                    currSongPlaying = myPlayer.currSongPlaying;
-                    updateUI(currSongPlaying);
-
-                    Log.d("noww", currSongPlaying.getName());
+                    nextSong();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -83,11 +87,9 @@ public class CurrentView extends AppCompatActivity {
         currentViewPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    myPlayer.prevSong();
 
-                    currSongPlaying = myPlayer.currSongPlaying;
-                    updateUI(currSongPlaying);
+                try {
+                    prevSong();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -95,23 +97,30 @@ public class CurrentView extends AppCompatActivity {
         });
 
 
+        if (mediaPlayer.isPlaying())
+            currentViewPlayPause.setImageResource(R.drawable.pause);
+        else
+            currentViewPlayPause.setImageResource(R.drawable.play_button);
+
         currentViewPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (myPlayer.isPlaying) {
+                if (mediaPlayer.isPlaying()) {
                     currentViewPlayPause.setImageResource(R.drawable.play_button);
-                    myPlayer.pauseMusic();
+                    MyPlayer.pauseMusic();
                 } else {
-                    currentViewPlayPause.setImageResource(R.drawable.pause);
-                    if (myPlayer.currSongPlaying.getFile() != null) {
+                    if (MyPlayer.currSongPlaying.getFile() != null) {
+                        currentViewPlayPause.setImageResource(R.drawable.pause);
                         try {
-                            myPlayer.PlayMusic(myPlayer.currSongPlaying);
+                            MyPlayer.PlayMusic(MyPlayer.currSongPlaying);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }
             }
+
+
         });
 
 
@@ -128,22 +137,59 @@ public class CurrentView extends AppCompatActivity {
                     }
                 }
 
-                try {
-                    myPlayer.nextSong();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
 
             }
         };
-
         updateSeekBar.start();
     }
 
-    public static void updateUI(Song song) {
+    public void updateUI(Song song) {
         currentViewImage.setImageBitmap(song.getImage());
         currentViewName.setText(song.getName());
-        currentViewSeekBar.setProgress(0);
+        currentViewSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+        currentViewSeekBar.setMax(mediaPlayer.getDuration());
+    }
+
+
+    public void nextSong() throws IOException {
+        int currIndex = mySongs.indexOf(MyPlayer.currSongPlaying);
+        Log.d("indexing", "curr " + currIndex);
+        int newIndex = currIndex + 1;
+        if (newIndex == mySongs.size()) {
+            newIndex = 0;
+        }
+
+        MyPlayer.PlayMusic(mySongs.get(newIndex));
+        updateUI(mySongs.get(newIndex));
+    }
+
+    public void prevSong() throws IOException {
+        int currIndex = mySongs.indexOf(MyPlayer.currSongPlaying);
+        Log.d("indexing", "curr " + currIndex);
+        int newIndex = currIndex - 1;
+        if (newIndex == -1) {
+            newIndex = mySongs.size() - 1;
+        }
+        MyPlayer.PlayMusic(mySongs.get(newIndex));
+        updateUI(mySongs.get(newIndex));
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Log.d("onresult","backpressed");
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 }

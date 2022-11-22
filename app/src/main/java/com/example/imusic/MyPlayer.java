@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MyPlayer {
-    ArrayList<Song> all_MP3_Files = new ArrayList<>();
+    static ArrayList<Song> all_MP3_Files = new ArrayList<>();
     public static MediaPlayer mediaPlayer;
     static Context context;
 
@@ -31,7 +31,7 @@ public class MyPlayer {
     }
 
 
-    public ArrayList<Song> getAll_MP3_Files() {
+    public static ArrayList<Song> getAll_MP3_Files() {
 
         all_MP3_Files = new ArrayList<>();
         File file = Environment.getExternalStorageDirectory();
@@ -44,7 +44,7 @@ public class MyPlayer {
     }
 
 
-    public void fetchSongs(File folder) {
+    public static void fetchSongs(File folder) {
 
         File[] myFiles = folder.listFiles();
 
@@ -86,10 +86,14 @@ public class MyPlayer {
 
     public static void PlayMusic(Song song) throws IOException {
 
+        Log.d("playingSong", song.getName() + " " + mediaPlayer);
+        Log.d("playingSong", currSongPlaying.getName() + " " + mediaPlayer);
         if (mediaPlayer != null) {
-            mediaPlayer.start();
-            mediaPlayer.seekTo(songPosition);
-            return;
+            if (song == currSongPlaying) {
+                mediaPlayer.start();
+                mediaPlayer.seekTo(songPosition);
+                return;
+            }
         }
 
         Uri uri = Uri.parse(song.getFile().toString());

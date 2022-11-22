@@ -1,10 +1,15 @@
 package com.example.imusic;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -25,12 +30,12 @@ import java.util.Comparator;
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     public static ImageView prev, play_pause, next;
-    Boolean playing = true;
+
 
     public static TextView currSong;
 
-    ArrayList<Song> mySongs;
-    public MyPlayer myPlayer;
+    public static ArrayList<Song> mySongs;
+    public static MyPlayer myPlayer;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -57,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (myPlayer.currSongPlaying.getName() != null) {
             currSong.setText(myPlayer.currSongPlaying.getName());
+        }
+
+        if (MyPlayer.mediaPlayer != null && MyPlayer.mediaPlayer.isPlaying()) {
             play_pause.setImageResource(R.drawable.pause);
         } else {
             play_pause.setImageResource(R.drawable.play_button);
@@ -107,22 +115,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        currSong.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                if (MyPlayer.currSongPlaying.getName() != null) {
-//                    Intent intent = new Intent(MainActivity.this, CurrentView.class);
-//                    intent.putExtra("playingPosition", mySongs.indexOf(myPlayer.currSongPlaying));
-//                    Log.d("indexing", "Sending " + String.valueOf(mySongs.indexOf(MyPlayer.currSongPlaying)));
-//                    startActivity(intent);
-//                }
-//
-//
-//            }
-//        });
+        currSong.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (MyPlayer.currSongPlaying.getName() != null) {
+                    Intent intent = new Intent(MainActivity.this, CurrentView.class);
+                    intent.putExtra("playingPosition", mySongs.indexOf(myPlayer.currSongPlaying));
+
+                    MyActivityResultLauncher.launch(intent);
+
+                }
+
+
+            }
+        });
 
     }
+
+    ActivityResultLauncher<Intent> MyActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Log.d("onresult", "yess1 "+result.getResultCode());
+                    if (result.getResultCode() == RESULT_OK) {
+                        Log.d("onresult", "yess2");
+                        if (MyPlayer.mediaPlayer != null && MyPlayer.mediaPlayer.isPlaying()) {
+                            play_pause.setImageResource(R.drawable.pause);
+                        } else {
+                            play_pause.setImageResource(R.drawable.play_button);
+                        }
+                    }
+                }
+            });
+
 
     @Override
     public void onStart() {
