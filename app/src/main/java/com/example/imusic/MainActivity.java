@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,11 +51,31 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(songsAdapter);
 
+        play_pause.setImageResource(R.drawable.play_button);
+
+        if (myPlayer.currSongPlaying.getName() != null) {
+            currSong.setText(myPlayer.currSongPlaying.getName());
+        }
 
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myPlayer.pauseMusic();
+                if (myPlayer.isPlaying) {
+                    play_pause.setImageResource(R.drawable.play_button);
+                    myPlayer.pauseMusic();
+                } else {
+                    play_pause.setImageResource(R.drawable.pause);
+                    if (myPlayer.currSongPlaying.getFile() != null) {
+                        try {
+                            myPlayer.PlayMusic(myPlayer.currSongPlaying, getApplicationContext());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, "Select a Song", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
             }
         });
 

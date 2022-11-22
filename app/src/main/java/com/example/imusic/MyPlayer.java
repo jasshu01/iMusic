@@ -20,6 +20,8 @@ public class MyPlayer {
     public static MediaPlayer mediaPlayer;
     Context context;
     TextView currSong;
+    boolean isPlaying = false;
+    public static Song currSongPlaying = new Song();
 
     public MyPlayer(Context context) {
         this.context = context;
@@ -85,12 +87,14 @@ public class MyPlayer {
         Uri uri = Uri.parse(song.getFile().toString());
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
+            isPlaying = false;
         }
 
         mediaPlayer = MediaPlayer.create(context, uri);
         mediaPlayer.start();
-
+        isPlaying = true;
         currSong.setText(song.getName());
+        currSongPlaying = song;
 
 
         Log.d("playingSong", song.getName() + " " + mediaPlayer);
@@ -99,14 +103,12 @@ public class MyPlayer {
 
     public void pauseMusic() {
 
-
         Log.d("playingSong", "pausing " + mediaPlayer);
-
         if (mediaPlayer != null) {
             Log.d("playingSong", "pausing ");
             mediaPlayer.pause();
+            isPlaying = false;
         }
-
     }
 
 
