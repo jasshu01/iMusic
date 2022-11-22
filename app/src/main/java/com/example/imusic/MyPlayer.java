@@ -19,23 +19,16 @@ import java.util.ArrayList;
 public class MyPlayer {
     ArrayList<Song> all_MP3_Files = new ArrayList<>();
     public static MediaPlayer mediaPlayer;
-    Context context;
-    TextView currSong;
-    ImageView play_pause;
-    boolean isPlaying = false;
-    public static Song currSongPlaying = new Song();
+    static Context context;
 
+    static int songPosition = 0;
+
+    public static Song currSongPlaying = new Song();
 
 
     public MyPlayer(Context context) {
         this.context = context;
-        this.currSong = MainActivity.currSong;
-        this.play_pause = MainActivity.play_pause;
-
-
-
     }
-
 
 
     public ArrayList<Song> getAll_MP3_Files() {
@@ -91,74 +84,40 @@ public class MyPlayer {
         }
     }
 
-    public void PlayMusic(Song song) throws IOException {
+    public static void PlayMusic(Song song) throws IOException {
+
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+            mediaPlayer.seekTo(songPosition);
+            return;
+        }
 
         Uri uri = Uri.parse(song.getFile().toString());
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            isPlaying = false;
         }
-
+        songPosition = 0;
 
         mediaPlayer = MediaPlayer.create(context, uri);
         mediaPlayer.start();
-        isPlaying = true;
-        currSong.setText(song.getName());
+
+
         currSongPlaying = song;
 
-        if (CurrentView.currentViewImage != null) {
-            CurrentView.updateUI(currSongPlaying);
-        }
 
-//        Thread thread = new Thread() {
-//
-//            public void run() {
-//
-//                if (CurrentView.currentViewSeekBar != null)
-//                {
-//                    while(mediaPlayer.getCurrentPosition()<mediaPlayer.getDuration())
-//                        CurrentView.currentViewSeekBar.setProgress(mediaPlayer.getCurrentPosition());
-//                }
-//
-//            }
-//        };
-//        thread.run();
-
-        play_pause.setImageResource(R.drawable.pause);
         Log.d("playingSong", song.getName() + " " + mediaPlayer);
 
     }
 
-    public void pauseMusic() {
+    public static void pauseMusic() {
 
         Log.d("playingSong", "pausing " + mediaPlayer);
         if (mediaPlayer != null) {
             Log.d("playingSong", "pausing ");
             mediaPlayer.pause();
-            isPlaying = false;
-            play_pause.setImageResource(R.drawable.play_button);
+            songPosition = mediaPlayer.getCurrentPosition();
+
         }
-    }
-
-
-    public void nextSong() throws IOException {
-        int currIndex = all_MP3_Files.indexOf(currSongPlaying);
-        int newIndex = currIndex + 1;
-        if (newIndex == all_MP3_Files.size()) {
-            newIndex = 0;
-        }
-
-        PlayMusic(all_MP3_Files.get(newIndex));
-    }
-
-    public void prevSong() throws IOException {
-        int currIndex = all_MP3_Files.indexOf(currSongPlaying);
-        int newIndex = currIndex - 1;
-        if (newIndex == -1) {
-            newIndex = all_MP3_Files.size() - 1;
-        }
-
-        PlayMusic(all_MP3_Files.get(newIndex));
     }
 
 

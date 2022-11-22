@@ -22,12 +22,11 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
     ArrayList<Song> localDataSet = new ArrayList<>();
 
-    MyPlayer myPlayer;
 
     public SongsAdapter(ArrayList<Song> dataset) {
 
         localDataSet = dataset;
-//        localDataSet = myPlayer.getAll_MP3_Files();
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -39,7 +38,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             songImage = view.findViewById(R.id.songImage);
             songInfo = view.findViewById(R.id.songInfo);
             songName = view.findViewById(R.id.songName);
-            myPlayer = new MyPlayer(songImage.getContext());
 
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +46,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
                     Toast.makeText(songImage.getContext(), localDataSet.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
                     try {
-                        myPlayer.PlayMusic(localDataSet.get(getAdapterPosition()));
+                        MyPlayer.currSongPlaying = localDataSet.get(getAdapterPosition());
+                        MyPlayer.PlayMusic(localDataSet.get(getAdapterPosition()));
+
+                        MainActivity.play_pause.setImageResource(R.drawable.pause);
+                        MainActivity.currSong.setText(MyPlayer.currSongPlaying.getName());
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

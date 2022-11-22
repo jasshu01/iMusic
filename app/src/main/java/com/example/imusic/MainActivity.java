@@ -26,9 +26,11 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     public static ImageView prev, play_pause, next;
     Boolean playing = true;
-    MediaPlayer mediaPlayer;
+
     public static TextView currSong;
 
+    ArrayList<Song> mySongs;
+    public MyPlayer myPlayer;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -42,10 +44,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.SongListrecyclerView);
         currSong = findViewById(R.id.currSong);
         currSong.setText("Play Music");
-        MyPlayer myPlayer = new MyPlayer(getApplicationContext());
+        myPlayer = new MyPlayer(getApplicationContext());
 
-
-        ArrayList<Song> mySongs = myPlayer.getAll_MP3_Files();
+        mySongs = myPlayer.getAll_MP3_Files();
 
 
         SongsAdapter songsAdapter = new SongsAdapter(mySongs);
@@ -56,17 +57,22 @@ public class MainActivity extends AppCompatActivity {
 
         if (myPlayer.currSongPlaying.getName() != null) {
             currSong.setText(myPlayer.currSongPlaying.getName());
+            play_pause.setImageResource(R.drawable.pause);
+        } else {
+            play_pause.setImageResource(R.drawable.play_button);
         }
+
 
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (myPlayer.isPlaying) {
+                if (MyPlayer.mediaPlayer.isPlaying()) {
                     play_pause.setImageResource(R.drawable.play_button);
-                    myPlayer.pauseMusic();
+                    MyPlayer.pauseMusic();
                 } else {
-                    play_pause.setImageResource(R.drawable.pause);
                     if (myPlayer.currSongPlaying.getFile() != null) {
+
+                        play_pause.setImageResource(R.drawable.pause);
                         try {
                             myPlayer.PlayMusic(myPlayer.currSongPlaying);
                         } catch (IOException e) {
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    myPlayer.nextSong();
+                    nextSong();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -94,21 +100,62 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                    myPlayer.prevSong();
+                    prevSong();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
 
-        currSong.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivity.this,CurrentView.class);
-                intent.putExtra("playingPosition",mySongs.indexOf(myPlayer.currSongPlaying));
-                startActivity(intent);
-            }
-        });
+//        currSong.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                if (MyPlayer.currSongPlaying.getName() != null) {
+//                    Intent intent = new Intent(MainActivity.this, CurrentView.class);
+//                    intent.putExtra("playingPosition", mySongs.indexOf(myPlayer.currSongPlaying));
+//                    Log.d("indexing", "Sending " + String.valueOf(mySongs.indexOf(MyPlayer.currSongPlaying)));
+//                    startActivity(intent);
+//                }
+//
+//
+//            }
+//        });
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (MyPlayer.currSongPlaying.getName() != null) {
+            currSong.setText(myPlayer.currSongPlaying.getName());
+        }
+
+    }
+
+    public void nextSong() throws IOException {
+        int currIndex = mySongs.indexOf(myPlayer.currSongPlaying);
+        Log.d("indexing", "curr " + currIndex);
+        int newIndex = currIndex + 1;
+        if (newIndex == mySongs.size()) {
+            newIndex = 0;
+        }
+
+        MyPlayer.PlayMusic(mySongs.get(newIndex));
+        currSong.setText(myPlayer.currSongPlaying.getName());
+    }
+
+    public void prevSong() throws IOException {
+        int currIndex = mySongs.indexOf(MyPlayer.currSongPlaying);
+
+        Log.d("indexing", "curr " + currIndex);
+        int newIndex = currIndex - 1;
+        if (newIndex == -1) {
+            newIndex = mySongs.size() - 1;
+        }
+        MyPlayer.PlayMusic(mySongs.get(newIndex));
+        currSong.setText(myPlayer.currSongPlaying.getName());
+    }
+
+
 }
