@@ -1,22 +1,31 @@
 package com.example.imusic;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
-
-    ImageView prev,play_pause,next;
+    RecyclerView recyclerView;
+    ImageView prev, play_pause, next;
+    Boolean playing = true;
+    MediaPlayer mediaPlayer;
+    public static TextView currSong;
 
 
     @SuppressLint("MissingInflatedId")
@@ -25,35 +34,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        prev=findViewById(R.id.previous);
-        play_pause=findViewById(R.id.play_pause);
-        next=findViewById(R.id.next);
+        prev = findViewById(R.id.previous);
+        play_pause = findViewById(R.id.play_pause);
+        next = findViewById(R.id.next);
+        recyclerView = findViewById(R.id.SongListrecyclerView);
+        currSong = findViewById(R.id.currSong);
+        currSong.setText("Play Music");
+        MyPlayer myPlayer = new MyPlayer(getApplicationContext());
 
 
-        ArrayList<File> mySongs = new MyPlayer().getAll_MP3_Files();
+        ArrayList<Song> mySongs = myPlayer.getAll_MP3_Files();
 
-        for (File file :
-                mySongs) {
-            Log.d("MySongName", file.getName());
-        }
 
+        SongsAdapter songsAdapter = new SongsAdapter(mySongs);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(songsAdapter);
 
 
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
-                    new MyPlayer().PlayMusic(mySongs.get(0),MainActivity.this);
-
-                } catch (IOException e) {
-                    Log.d("playing",e.toString());
-                    e.printStackTrace();
-                }
+                myPlayer.pauseMusic();
             }
         });
-
-
-
 
     }
 }
