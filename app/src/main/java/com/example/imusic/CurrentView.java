@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -15,11 +16,15 @@ import java.io.IOException;
 
 public class CurrentView extends AppCompatActivity {
 
-    TextView currentViewName;
-    ImageView currentViewImage, currentViewPrev, currentViewPlayPause, currentViewNext;
-    SeekBar currentViewSeekBar;
+    static TextView currentViewName;
+    static ImageView currentViewImage;
+    ImageView currentViewPrev;
+    ImageView currentViewPlayPause;
+    ImageView currentViewNext;
+    static SeekBar currentViewSeekBar;
     MyPlayer myPlayer;
     Song currSongPlaying;
+    Thread updateSeekBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -42,6 +47,24 @@ public class CurrentView extends AppCompatActivity {
         currentViewImage.setImageBitmap(currSongPlaying.getImage());
         currentViewName.setText(currSongPlaying.getName());
 
+        currentViewSeekBar.setMax(MyPlayer.mediaPlayer.getDuration());
+        currentViewSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                MyPlayer.mediaPlayer.seekTo(seekBar.getProgress());
+            }
+        });
+
         currentViewNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,11 +72,14 @@ public class CurrentView extends AppCompatActivity {
                     myPlayer.nextSong();
                     currSongPlaying = myPlayer.currSongPlaying;
                     updateUI(currSongPlaying);
+
+                    Log.d("noww", currSongPlaying.getName());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
+
         currentViewPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,10 +115,35 @@ public class CurrentView extends AppCompatActivity {
         });
 
 
+        updateSeekBar = new Thread() {
+            @Override
+            public void run() {
+                while (MyPlayer.mediaPlayer.getCurrentPosition() < MyPlayer.mediaPlayer.getDuration()) {
+
+                    currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                try {
+                    myPlayer.nextSong();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        };
+
+        updateSeekBar.start();
     }
 
-    public void updateUI(Song song) {
+    public static void updateUI(Song song) {
         currentViewImage.setImageBitmap(song.getImage());
         currentViewName.setText(song.getName());
+        currentViewSeekBar.setProgress(0);
     }
 }

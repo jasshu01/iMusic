@@ -25,12 +25,18 @@ public class MyPlayer {
     boolean isPlaying = false;
     public static Song currSongPlaying = new Song();
 
+
+
     public MyPlayer(Context context) {
         this.context = context;
         this.currSong = MainActivity.currSong;
         this.play_pause = MainActivity.play_pause;
 
+
+
     }
+
+
 
     public ArrayList<Song> getAll_MP3_Files() {
 
@@ -99,6 +105,24 @@ public class MyPlayer {
         isPlaying = true;
         currSong.setText(song.getName());
         currSongPlaying = song;
+
+        if (CurrentView.currentViewImage != null) {
+            CurrentView.updateUI(currSongPlaying);
+        }
+
+//        Thread thread = new Thread() {
+//
+//            public void run() {
+//
+//                if (CurrentView.currentViewSeekBar != null)
+//                {
+//                    while(mediaPlayer.getCurrentPosition()<mediaPlayer.getDuration())
+//                        CurrentView.currentViewSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+//                }
+//
+//            }
+//        };
+//        thread.run();
 
         play_pause.setImageResource(R.drawable.pause);
         Log.d("playingSong", song.getName() + " " + mediaPlayer);
