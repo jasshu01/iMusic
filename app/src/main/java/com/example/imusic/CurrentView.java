@@ -97,15 +97,11 @@ public class CurrentView extends AppCompatActivity {
         });
 
 
-        if (mediaPlayer.isPlaying())
-            currentViewPlayPause.setImageResource(R.drawable.pause);
-        else
-            currentViewPlayPause.setImageResource(R.drawable.play_button);
-
         currentViewPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mediaPlayer.isPlaying()) {
+
+                if (MyPlayer.mediaPlayer.isPlaying()) {
                     currentViewPlayPause.setImageResource(R.drawable.play_button);
                     MyPlayer.pauseMusic();
                 } else {
@@ -119,8 +115,7 @@ public class CurrentView extends AppCompatActivity {
                     }
                 }
             }
-
-
+            
         });
 
 
@@ -148,6 +143,12 @@ public class CurrentView extends AppCompatActivity {
         currentViewName.setText(song.getName());
         currentViewSeekBar.setProgress(mediaPlayer.getCurrentPosition());
         currentViewSeekBar.setMax(mediaPlayer.getDuration());
+
+//        if (mediaPlayer.isPlaying())
+            currentViewPlayPause.setImageResource(R.drawable.pause);
+//        else
+//            currentViewPlayPause.setImageResource(R.drawable.play_button);
+
     }
 
 
@@ -177,7 +178,7 @@ public class CurrentView extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        Log.d("onresult","backpressed");
+        Log.d("onresult", "backpressed");
         Intent intent = new Intent();
         setResult(RESULT_OK, intent);
         finish();
