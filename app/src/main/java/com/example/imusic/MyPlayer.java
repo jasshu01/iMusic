@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -20,12 +21,14 @@ public class MyPlayer {
     public static MediaPlayer mediaPlayer;
     Context context;
     TextView currSong;
+    ImageView play_pause;
     boolean isPlaying = false;
     public static Song currSongPlaying = new Song();
 
     public MyPlayer(Context context) {
         this.context = context;
         this.currSong = MainActivity.currSong;
+        this.play_pause = MainActivity.play_pause;
 
     }
 
@@ -82,7 +85,7 @@ public class MyPlayer {
         }
     }
 
-    public void PlayMusic(Song song, Context context) throws IOException {
+    public void PlayMusic(Song song) throws IOException {
 
         Uri uri = Uri.parse(song.getFile().toString());
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
@@ -90,13 +93,14 @@ public class MyPlayer {
             isPlaying = false;
         }
 
+
         mediaPlayer = MediaPlayer.create(context, uri);
         mediaPlayer.start();
         isPlaying = true;
         currSong.setText(song.getName());
         currSongPlaying = song;
 
-
+        play_pause.setImageResource(R.drawable.pause);
         Log.d("playingSong", song.getName() + " " + mediaPlayer);
 
     }
@@ -108,7 +112,29 @@ public class MyPlayer {
             Log.d("playingSong", "pausing ");
             mediaPlayer.pause();
             isPlaying = false;
+            play_pause.setImageResource(R.drawable.play_button);
         }
+    }
+
+
+    public void nextSong() throws IOException {
+        int currIndex = all_MP3_Files.indexOf(currSongPlaying);
+        int newIndex = currIndex + 1;
+        if (newIndex == all_MP3_Files.size()) {
+            newIndex = 0;
+        }
+
+        PlayMusic(all_MP3_Files.get(newIndex));
+    }
+
+    public void prevSong() throws IOException {
+        int currIndex = all_MP3_Files.indexOf(currSongPlaying);
+        int newIndex = currIndex - 1;
+        if (newIndex == -1) {
+            newIndex = all_MP3_Files.size() - 1;
+        }
+
+        PlayMusic(all_MP3_Files.get(newIndex));
     }
 
 

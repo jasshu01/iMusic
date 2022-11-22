@@ -20,18 +20,19 @@ import java.util.ArrayList;
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
 
 
-    ArrayList<Song> localDataSet=new ArrayList<>();
-    ImageView songImage, songInfo;
-    TextView songName;
+    ArrayList<Song> localDataSet = new ArrayList<>();
+
     MyPlayer myPlayer;
 
     public SongsAdapter(ArrayList<Song> dataset) {
 
-                localDataSet = dataset;
+        localDataSet = dataset;
 //        localDataSet = myPlayer.getAll_MP3_Files();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView songImage, songInfo;
+        TextView songName;
 
         public ViewHolder(View view) {
             super(view);
@@ -47,7 +48,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
                     Toast.makeText(songImage.getContext(), localDataSet.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
                     try {
-                        myPlayer.PlayMusic(localDataSet.get(getAdapterPosition()), songImage.getContext());
+                        myPlayer.PlayMusic(localDataSet.get(getAdapterPosition()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -62,7 +63,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
     @NonNull
     @Override
-    public SongsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.song_view, viewGroup, false);
 
@@ -70,14 +71,14 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongsAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Log.d("myposition", String.valueOf(position));
-        songImage.setImageBitmap(localDataSet.get(position).getImage());
+        holder.songImage.setImageBitmap(localDataSet.get(position).getImage());
         Log.d("playing", localDataSet.get(position).getName());
 
-        songName.setText(localDataSet.get(position).getName());
+        holder.songName.setText(localDataSet.get(position).getName());
 
-        songInfo.setOnClickListener(new View.OnClickListener() {
+        holder.songInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(), localDataSet.get(position).getName() + " " + position, Toast.LENGTH_SHORT).show();

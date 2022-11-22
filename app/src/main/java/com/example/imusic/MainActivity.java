@@ -23,7 +23,7 @@ import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    ImageView prev, play_pause, next;
+    public static ImageView prev, play_pause, next;
     Boolean playing = true;
     MediaPlayer mediaPlayer;
     public static TextView currSong;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     play_pause.setImageResource(R.drawable.pause);
                     if (myPlayer.currSongPlaying.getFile() != null) {
                         try {
-                            myPlayer.PlayMusic(myPlayer.currSongPlaying, getApplicationContext());
+                            myPlayer.PlayMusic(myPlayer.currSongPlaying);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -75,6 +75,27 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Select a Song", Toast.LENGTH_SHORT).show();
                     }
 
+                }
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    myPlayer.nextSong();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    myPlayer.prevSong();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
