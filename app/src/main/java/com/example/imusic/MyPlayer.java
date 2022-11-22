@@ -86,8 +86,8 @@ public class MyPlayer {
 
     public static void PlayMusic(Song song) throws IOException {
 
-        Log.d("playingSong", song.getName() + " " + mediaPlayer);
-        Log.d("playingSong", currSongPlaying.getName() + " " + mediaPlayer);
+        Log.d("playingSong", song.getName() + " song " + mediaPlayer);
+        Log.d("playingSong", currSongPlaying.getName() + " curr " + mediaPlayer);
         if (mediaPlayer != null) {
             if (song == currSongPlaying) {
                 mediaPlayer.start();
@@ -109,7 +109,7 @@ public class MyPlayer {
         currSongPlaying = song;
 
 
-        Log.d("playingSong", song.getName() + " " + mediaPlayer);
+        Log.d("playingSong", currSongPlaying.getName() + " curr2 " + mediaPlayer);
 
     }
 

@@ -46,7 +46,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
                     Toast.makeText(songImage.getContext(), localDataSet.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
                     try {
-                        MyPlayer.currSongPlaying = localDataSet.get(getAdapterPosition());
+
                         MyPlayer.PlayMusic(localDataSet.get(getAdapterPosition()));
 
                         MainActivity.play_pause.setImageResource(R.drawable.pause);
