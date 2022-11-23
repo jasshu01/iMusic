@@ -135,13 +135,11 @@ public class CurrentView extends AppCompatActivity {
         currentViewSeekBar.setMax(MyPlayer.mediaPlayer.getDuration());
 
 
-
         if (MyPlayer.mediaPlayer.isPlaying())
             currentViewPlayPause.setImageResource(R.drawable.pause);
         else
             currentViewPlayPause.setImageResource(R.drawable.play_button);
 
-//        updateSeekBar.start();
 
         updateSeekBar = new Thread() {
             @Override
@@ -154,14 +152,9 @@ public class CurrentView extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
-
                 }
-
-
             }
         };
-
         updateSeekBar.start();
 
 
