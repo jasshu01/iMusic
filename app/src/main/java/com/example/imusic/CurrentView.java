@@ -56,9 +56,23 @@ public class CurrentView extends AppCompatActivity {
         updateUI(MyPlayer.currSongPlaying);
 
 
+        MyPlayer.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                try {
+                    nextSong();
+//                    updateSeekBar.start();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         currentViewSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
+
 
             }
 
@@ -69,6 +83,8 @@ public class CurrentView extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+
+                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
                 MyPlayer.mediaPlayer.seekTo(seekBar.getProgress());
             }
         });
@@ -115,14 +131,14 @@ public class CurrentView extends AppCompatActivity {
                     }
                 }
             }
-            
+
         });
 
 
         updateSeekBar = new Thread() {
             @Override
             public void run() {
-                while (MyPlayer.mediaPlayer.getCurrentPosition() < MyPlayer.mediaPlayer.getDuration()) {
+                while (MyPlayer.mediaPlayer.getCurrentPosition() + 1000 < MyPlayer.mediaPlayer.getDuration()) {
 
                     currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
                     try {
@@ -130,24 +146,38 @@ public class CurrentView extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                }
+                    Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
 
+                }
+                Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
+
+//
+//                try {
+//                    nextSong();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
 
             }
         };
+
         updateSeekBar.start();
+
     }
 
     public void updateUI(Song song) {
         currentViewImage.setImageBitmap(song.getImage());
         currentViewName.setText(song.getName());
-        currentViewSeekBar.setProgress(mediaPlayer.getCurrentPosition());
+        currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
         currentViewSeekBar.setMax(mediaPlayer.getDuration());
 
 //        if (mediaPlayer.isPlaying())
-            currentViewPlayPause.setImageResource(R.drawable.pause);
+        currentViewPlayPause.setImageResource(R.drawable.pause);
 //        else
 //            currentViewPlayPause.setImageResource(R.drawable.play_button);
+
+//        updateSeekBar.start();
 
     }
 
@@ -160,8 +190,11 @@ public class CurrentView extends AppCompatActivity {
             newIndex = 0;
         }
 
+
         MyPlayer.PlayMusic(mySongs.get(newIndex));
         updateUI(mySongs.get(newIndex));
+
+
     }
 
     public void prevSong() throws IOException {
