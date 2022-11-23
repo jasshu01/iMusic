@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<Song> mySongs;
     public static MyPlayer myPlayer;
+    Thread updateSeekBar;
+
+    SeekBar seekBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         play_pause = findViewById(R.id.play_pause);
         next = findViewById(R.id.next);
         recyclerView = findViewById(R.id.SongListrecyclerView);
+        seekBar = findViewById(R.id.seekBar2);
         currSong = findViewById(R.id.currSong);
         currSong.setText("Play Music");
         myPlayer = new MyPlayer(getApplicationContext());
@@ -60,15 +65,26 @@ public class MainActivity extends AppCompatActivity {
 
         play_pause.setImageResource(R.drawable.play_button);
 
-        if (myPlayer.currSongPlaying.getName() != null) {
-            currSong.setText(myPlayer.currSongPlaying.getName());
-        }
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
 
-        if (MyPlayer.mediaPlayer != null && MyPlayer.mediaPlayer.isPlaying()) {
-            play_pause.setImageResource(R.drawable.pause);
-        } else {
-            play_pause.setImageResource(R.drawable.play_button);
-        }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
+                MyPlayer.mediaPlayer.seekTo(seekBar.getProgress());
+            }
+        });
 
 
         play_pause.setOnClickListener(new View.OnClickListener() {
@@ -138,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    Log.d("onresult", "yess1 "+result.getResultCode());
+                    Log.d("onresult", "yess1 " + result.getResultCode());
                     if (result.getResultCode() == RESULT_OK) {
                         Log.d("onresult", "yess2");
                         if (MyPlayer.mediaPlayer != null && MyPlayer.mediaPlayer.isPlaying()) {
@@ -157,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         if (MyPlayer.currSongPlaying.getName() != null) {
             currSong.setText(myPlayer.currSongPlaying.getName());
         }
-
+        updateUI();
     }
 
     public void nextSong() throws IOException {
@@ -170,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
         MyPlayer.PlayMusic(mySongs.get(newIndex));
         currSong.setText(myPlayer.currSongPlaying.getName());
+        updateUI();
     }
 
     public void prevSong() throws IOException {
@@ -182,6 +199,68 @@ public class MainActivity extends AppCompatActivity {
         }
         MyPlayer.PlayMusic(mySongs.get(newIndex));
         currSong.setText(myPlayer.currSongPlaying.getName());
+        updateUI();
+    }
+
+
+    public void updateUI() {
+//        currentViewImage.setImageBitmap(song.getImage());
+
+        if (myPlayer.currSongPlaying.getName() != null) {
+            currSong.setText(myPlayer.currSongPlaying.getName());
+        } else {
+            currSong.setText("Play Music");
+//            seekBar.setVisibility(View.GONE);
+            return;
+        }
+
+//        seekBar.setVisibility(View.VISIBLE);
+
+        currSong.setText(myPlayer.currSongPlaying.getName());
+        seekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
+        seekBar.setMax(MyPlayer.mediaPlayer.getDuration());
+
+
+        if (MyPlayer.mediaPlayer != null && MyPlayer.mediaPlayer.isPlaying()) {
+            play_pause.setImageResource(R.drawable.pause);
+        } else {
+            play_pause.setImageResource(R.drawable.play_button);
+        }
+
+
+        updateSeekBar = new Thread() {
+            @Override
+            public void run() {
+                while (MyPlayer.mediaPlayer.getCurrentPosition() + 1000 < MyPlayer.mediaPlayer.getDuration()) {
+
+                    seekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
+
+                }
+                Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
+
+            }
+        };
+
+        updateSeekBar.start();
+
+
+        MyPlayer.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                try {
+                    nextSong();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
 

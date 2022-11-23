@@ -7,49 +7,67 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="#000000"
-        android:orientation="horizontal"
+        android:layout_marginBottom="2dp"
+        android:background="#DC3838"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.996"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SongListrecyclerView"
+        app:layout_constraintVertical_bias="1.0">
 
-        <TextView
-            android:id="@+id/currSong"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="6"
-            android:gravity="center|start"
-            android:padding="10dp"
-            android:text="TextView"
-            android:textColor="#FFFFFF" />
+        <SeekBar
+            android:id="@+id/seekBar2"
+            style="@style/Widget.AppCompat.SeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/previous"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="2dp"
-            app:srcCompat="@drawable/previous" />
+            android:layout_weight="5"
+            android:background="#000000"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/play_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="2dp"
-            app:srcCompat="@drawable/play_button" />
+            <TextView
+                android:id="@+id/currSong"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="6"
+                android:gravity="center|start"
+                android:padding="10dp"
+                android:text="TextView"
+                android:textColor="#FFFFFF" />
 
-        <ImageView
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="2dp"
-            app:srcCompat="@drawable/next" />
+            <ImageView
+                android:id="@+id/previous"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="2dp"
+                app:srcCompat="@drawable/previous" />
+
+            <ImageView
+                android:id="@+id/play_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="2dp"
+                app:srcCompat="@drawable/play_button" />
+
+            <ImageView
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="2dp"
+                app:srcCompat="@drawable/next" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -78,9 +96,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
+
             android:text="iMusic"
-            android:textAlignment="viewStart"
             android:textColor="#FCFCFC"
             android:textSize="34sp"
             android:textStyle="bold|italic" />
@@ -89,15 +107,17 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/SongListrecyclerView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="#BBC897"
+
         android:padding="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
     </androidx.recyclerview.widget.RecyclerView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

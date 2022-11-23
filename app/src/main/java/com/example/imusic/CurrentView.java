@@ -181,14 +181,8 @@ public class CurrentView extends AppCompatActivity {
         if (newIndex == mySongs.size()) {
             newIndex = 0;
         }
-
-
         MyPlayer.PlayMusic(mySongs.get(newIndex));
         updateUI(mySongs.get(newIndex));
-
-
-
-
     }
 
     public void prevSong() throws IOException {
