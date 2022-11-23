@@ -56,18 +56,6 @@ public class CurrentView extends AppCompatActivity {
         updateUI(MyPlayer.currSongPlaying);
 
 
-        MyPlayer.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                try {
-                    nextSong();
-//                    updateSeekBar.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         currentViewSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -135,6 +123,21 @@ public class CurrentView extends AppCompatActivity {
         });
 
 
+    }
+
+    public void updateUI(Song song) {
+        currentViewImage.setImageBitmap(song.getImage());
+        currentViewName.setText(song.getName());
+        currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
+        currentViewSeekBar.setMax(mediaPlayer.getDuration());
+
+//        if (mediaPlayer.isPlaying())
+        currentViewPlayPause.setImageResource(R.drawable.pause);
+//        else
+//            currentViewPlayPause.setImageResource(R.drawable.play_button);
+
+//        updateSeekBar.start();
+
         updateSeekBar = new Thread() {
             @Override
             public void run() {
@@ -151,33 +154,22 @@ public class CurrentView extends AppCompatActivity {
                 }
                 Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
 
-//
-//                try {
-//                    nextSong();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-
             }
         };
 
         updateSeekBar.start();
 
-    }
 
-    public void updateUI(Song song) {
-        currentViewImage.setImageBitmap(song.getImage());
-        currentViewName.setText(song.getName());
-        currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
-        currentViewSeekBar.setMax(mediaPlayer.getDuration());
-
-//        if (mediaPlayer.isPlaying())
-        currentViewPlayPause.setImageResource(R.drawable.pause);
-//        else
-//            currentViewPlayPause.setImageResource(R.drawable.play_button);
-
-//        updateSeekBar.start();
+        MyPlayer.mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                try {
+                    nextSong();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 
@@ -193,6 +185,8 @@ public class CurrentView extends AppCompatActivity {
 
         MyPlayer.PlayMusic(mySongs.get(newIndex));
         updateUI(mySongs.get(newIndex));
+
+
 
 
     }
