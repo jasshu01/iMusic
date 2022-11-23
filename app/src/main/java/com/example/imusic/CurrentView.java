@@ -60,6 +60,7 @@ public class CurrentView extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
+                currentViewImage.setRotation((float) 0.01 * MyPlayer.mediaPlayer.getCurrentPosition());
 
 
             }
@@ -127,6 +128,8 @@ public class CurrentView extends AppCompatActivity {
 
     public void updateUI(Song song) {
         currentViewImage.setImageBitmap(song.getImage());
+
+
         currentViewName.setText(song.getName());
         currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
         currentViewSeekBar.setMax(mediaPlayer.getDuration());
@@ -145,14 +148,14 @@ public class CurrentView extends AppCompatActivity {
 
                     currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
                     try {
-                        sleep(1000);
+                        sleep(10);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
+
 
                 }
-                Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
+
 
             }
         };
