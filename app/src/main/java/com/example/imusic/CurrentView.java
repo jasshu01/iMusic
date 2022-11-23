@@ -25,7 +25,7 @@ public class CurrentView extends AppCompatActivity {
     ImageView currentViewPlayPause;
     ImageView currentViewNext;
     SeekBar currentViewSeekBar;
-    MediaPlayer mediaPlayer;
+
 
     Thread updateSeekBar;
 
@@ -43,7 +43,7 @@ public class CurrentView extends AppCompatActivity {
         currentViewName = findViewById(R.id.currentViewName);
         currentViewSeekBar = findViewById(R.id.currentViewSeekBar);
 
-        mediaPlayer = MyPlayer.mediaPlayer;
+
         mySongs = MainActivity.mySongs;
 
 
@@ -53,7 +53,7 @@ public class CurrentView extends AppCompatActivity {
 
         Log.d("indexing", "recieving " + currentSongPosition);
 
-        updateUI(MyPlayer.currSongPlaying);
+        updateUI();
 
 
         currentViewSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -126,18 +126,20 @@ public class CurrentView extends AppCompatActivity {
 
     }
 
-    public void updateUI(Song song) {
-        currentViewImage.setImageBitmap(song.getImage());
+    public void updateUI() {
+        currentViewImage.setImageBitmap(MyPlayer.currSongPlaying.getImage());
 
 
-        currentViewName.setText(song.getName());
+        currentViewName.setText(MyPlayer.currSongPlaying.getName());
         currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
-        currentViewSeekBar.setMax(mediaPlayer.getDuration());
+        currentViewSeekBar.setMax(MyPlayer.mediaPlayer.getDuration());
 
-//        if (mediaPlayer.isPlaying())
-        currentViewPlayPause.setImageResource(R.drawable.pause);
-//        else
-//            currentViewPlayPause.setImageResource(R.drawable.play_button);
+
+
+        if (MyPlayer.mediaPlayer.isPlaying())
+            currentViewPlayPause.setImageResource(R.drawable.pause);
+        else
+            currentViewPlayPause.setImageResource(R.drawable.play_button);
 
 //        updateSeekBar.start();
 
@@ -185,7 +187,7 @@ public class CurrentView extends AppCompatActivity {
             newIndex = 0;
         }
         MyPlayer.PlayMusic(mySongs.get(newIndex));
-        updateUI(mySongs.get(newIndex));
+        updateUI();
     }
 
     public void prevSong() throws IOException {
@@ -196,7 +198,7 @@ public class CurrentView extends AppCompatActivity {
             newIndex = mySongs.size() - 1;
         }
         MyPlayer.PlayMusic(mySongs.get(newIndex));
-        updateUI(mySongs.get(newIndex));
+        updateUI();
     }
 
     @Override

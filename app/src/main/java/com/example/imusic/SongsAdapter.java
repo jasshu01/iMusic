@@ -49,8 +49,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
 
                         MyPlayer.PlayMusic(localDataSet.get(getAdapterPosition()));
 
-                        MainActivity.play_pause.setImageResource(R.drawable.pause);
-                        MainActivity.currSong.setText(MyPlayer.currSongPlaying.getName());
+                        MainActivity.updateUI();
 
                     } catch (IOException e) {
                         e.printStackTrace();

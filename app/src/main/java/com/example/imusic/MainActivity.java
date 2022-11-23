@@ -37,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static ArrayList<Song> mySongs;
     public static MyPlayer myPlayer;
-    Thread updateSeekBar;
+    static Thread updateSeekBar;
 
-    SeekBar seekBar;
+    static SeekBar seekBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (MyPlayer.mediaPlayer.isPlaying()) {
+                if (MyPlayer.mediaPlayer!=null && MyPlayer.mediaPlayer.isPlaying()) {
                     play_pause.setImageResource(R.drawable.play_button);
                     MyPlayer.pauseMusic();
                 } else {
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         updateUI();
     }
 
-    public void nextSong() throws IOException {
+    public static void nextSong() throws IOException {
         int currIndex = mySongs.indexOf(myPlayer.currSongPlaying);
         Log.d("indexing", "curr " + currIndex);
         int newIndex = currIndex + 1;
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void updateUI() {
+    public static void updateUI() {
 //        currentViewImage.setImageBitmap(song.getImage());
 
         if (myPlayer.currSongPlaying.getName() != null) {
