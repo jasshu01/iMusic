@@ -1,6 +1,8 @@
 package com.example.imusic;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -8,9 +10,12 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.IBinder;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,9 +34,6 @@ public class MyPlayer {
     public MyPlayer(Context context) {
         this.context = context;
     }
-
-
-
 
     public static ArrayList<Song> getAll_MP3_Files() {
 
@@ -107,9 +109,16 @@ public class MyPlayer {
         mediaPlayer = MediaPlayer.create(context, uri);
         mediaPlayer.start();
 
-
         currSongPlaying = song;
 
+        Intent intent = new Intent();
+        intent.setAction("com.jasshugarg.imusic.currsong");
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        intent.putExtra("currPlayingSong", currSongPlaying.getName());
+
+        Log.d("MusicBroadcast", "sending " + currSongPlaying.getName());
+//        context.sendBroadcast(intent);
+        context.sendOrderedBroadcast(intent, null);
 
         Log.d("playingSong", currSongPlaying.getName() + " curr2 " + mediaPlayer);
 
@@ -125,6 +134,4 @@ public class MyPlayer {
 
         }
     }
-
-
 }

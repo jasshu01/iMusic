@@ -31,15 +31,20 @@ import java.util.Comparator;
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     public static ImageView prev, play_pause, next;
-
-
     public static TextView currSong;
-
     public static ArrayList<Song> mySongs;
     public static MyPlayer myPlayer;
     static Thread updateSeekBar;
-
     static SeekBar seekBar;
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyPlayer.mediaPlayer.stop();
+        MyPlayer.mediaPlayer.release();
+    }
 
     @SuppressLint("MissingInflatedId")
     @Override
