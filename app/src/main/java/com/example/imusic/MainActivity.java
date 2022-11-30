@@ -10,14 +10,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,21 +39,15 @@ import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
+    ImageView showOptions;
     public static ImageView prev, play_pause, next;
+
     public static TextView currSong;
     public static ArrayList<Song> mySongs;
     public static MyPlayer myPlayer;
     static Thread updateSeekBar;
     static SeekBar seekBar;
 
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MyPlayer.mediaPlayer.stop();
-        MyPlayer.mediaPlayer.release();
-    }
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -58,12 +61,22 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.SongListrecyclerView);
         seekBar = findViewById(R.id.seekBar2);
         currSong = findViewById(R.id.currSong);
+        showOptions = findViewById(R.id.showOptions);
+
+
         currSong.setText("Play Music");
         myPlayer = new MyPlayer(getApplicationContext());
 
+
+
         mySongs = myPlayer.getAll_MP3_Files();
 
+        for (int i = 0; i < mySongs.size(); i++) {
+            Log.d("mysong", mySongs.get(i).getName() + " " + mySongs.get(i).getId());
+        }
 
+
+        Log.d("mysong", "starting " + mySongs.size());
         SongsAdapter songsAdapter = new SongsAdapter(mySongs);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(songsAdapter);
@@ -95,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         play_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (MyPlayer.mediaPlayer!=null && MyPlayer.mediaPlayer.isPlaying()) {
+                if (MyPlayer.mediaPlayer != null && MyPlayer.mediaPlayer.isPlaying()) {
                     play_pause.setImageResource(R.drawable.play_button);
                     MyPlayer.pauseMusic();
                 } else {
@@ -151,6 +164,92 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        showOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(MainActivity.this, view);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.actions, popup.getMenu());
+                popup.show();
+
+                Menu items = popup.getMenu();
+                if (SongsAdapter.isSelectMode) {
+
+                    MenuItem item = items.findItem(R.id.playlists);
+                    item.setEnabled(false);
+
+                    item = items.findItem(R.id.createPlaylist);
+                    if (SongsAdapter.selectedSongs.size() > 1) {
+                        item.setEnabled(true);
+                    } else {
+                        item.setEnabled(false);
+                    }
+
+                } else {
+
+                    MenuItem item = items.findItem(R.id.createPlaylist);
+                    item.setEnabled(false);
+                }
+
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        switch (menuItem.getItemId()) {
+                            case R.id.createPlaylist: {
+
+
+                                SongsAdapter.isSelectMode = false;
+
+
+                                ArrayList<Integer> arr = SongsAdapter.selectedSongs;
+
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                builder.setTitle("Set Playlist Name");
+
+                                final EditText input = new EditText(MainActivity.this);
+
+                                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                                builder.setView(input);
+
+                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String PlaylistName = input.getText().toString();
+                                        MyPlayer.handler.addPlaylist(new Playlist(PlaylistName, arr));
+                                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+
+                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+
+                                    }
+                                });
+
+                                builder.show();
+
+                            }
+
+                        }
+
+
+                        return false;
+                    }
+                });
+
+            }
+        });
+
 
     }
 

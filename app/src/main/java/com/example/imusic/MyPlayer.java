@@ -1,6 +1,7 @@
 package com.example.imusic;
 
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,13 +30,16 @@ public class MyPlayer {
     static int songPosition = 0;
 
     public static Song currSongPlaying = new Song();
-
+    public static dbHandler handler;
 
     public MyPlayer(Context context) {
         this.context = context;
+        handler = new dbHandler(context, "iMusic", null, 1);
+
+        handler.allPlaylists();
     }
 
-    public static ArrayList<Song> getAll_MP3_Files() {
+    public ArrayList<Song> getAll_MP3_Files() {
 
         all_MP3_Files = new ArrayList<>();
         File file = Environment.getExternalStorageDirectory();
@@ -44,7 +48,54 @@ public class MyPlayer {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             all_MP3_Files.sort(Song.songComparator);
         }
+
+        for (int i = 0; i < all_MP3_Files.size(); i++) {
+
+            Log.d("playing", all_MP3_Files.get(i).getName());
+            if (!handler.songExists(all_MP3_Files.get(i))) {
+                long k = handler.addSong(all_MP3_Files.get(i));
+                all_MP3_Files.get(i).setId((int) k);
+
+            } else {
+                int k = handler.getSongId(all_MP3_Files.get(i));
+                all_MP3_Files.get(i).setId(k);
+                Log.d("fetchingSong", "already exists");
+            }
+        }
+
+
         return all_MP3_Files;
+    }
+
+
+    public static Song getSongFromFilePath(String filepath) {
+        Song song = new Song();
+
+        File file = new File(filepath);
+
+        song.setFile(file);
+
+        android.media.MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(file.getPath());
+
+        byte[] data = mmr.getEmbeddedPicture();
+        if (data != null) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            song.setImage(bitmap);
+        } else {
+            song.setImage(null);
+        }
+
+        String name = file.getName().split("[.]")[0];
+        if (name.length() > 30) {
+            name = name.substring(0, 27);
+            name += "...";
+        }
+
+        Log.d("SongFetch", name);
+        song.setName(name);
+
+        return song;
     }
 
 
@@ -60,28 +111,7 @@ public class MyPlayer {
                     fetchSongs(file);
                 } else if (file.getName().endsWith(".mp3") && !file.getName().startsWith(".")) {
 
-                    Song song = new Song();
-                    song.setFile(file);
-
-                    android.media.MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                    mmr.setDataSource(file.getPath());
-
-                    byte[] data = mmr.getEmbeddedPicture();
-                    if (data != null) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                        song.setImage(bitmap);
-                    } else {
-                        song.setImage(null);
-                    }
-
-                    String name = file.getName().split("[.]")[0];
-                    if (name.length() > 30) {
-                        name = name.substring(0, 27);
-                        name += "...";
-                    }
-
-//                    Log.d("playing",name);
-                    song.setName(name);
+                    Song song = getSongFromFilePath(file.getAbsolutePath());
                     all_MP3_Files.add(song);
                 }
             }
@@ -116,10 +146,16 @@ public class MyPlayer {
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         intent.putExtra("currPlayingSong", currSongPlaying.getName());
 
-        Log.d("MusicBroadcast", "sending " + currSongPlaying.getName());
-//        context.sendBroadcast(intent);
-        context.sendOrderedBroadcast(intent, null);
 
+//        intent.setComponent(new ComponentName("com.example.mysongreceiverapp1", "com.example.mysongreceiverapp1.MyMusicReceiver1"));
+//        context.sendOrderedBroadcast(intent, null);
+//        intent.setComponent(new ComponentName("com.example.mysongreceiverapp2", "com.example.mysongreceiverapp2.MyMusicReceiver2"));
+
+
+        Log.d("MusicBroadcast", "sending " + currSongPlaying.getName());
+        context.sendOrderedBroadcast(intent, null);
+//        context.sendOrderedBroadcast(intent, "com.jasshugarg.musicinfo");
+//        context.sendBroadcast(intent);
         Log.d("playingSong", currSongPlaying.getName() + " curr2 " + mediaPlayer);
 
     }

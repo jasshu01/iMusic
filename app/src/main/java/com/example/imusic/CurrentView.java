@@ -51,7 +51,7 @@ public class CurrentView extends AppCompatActivity {
         int currentSongPosition = intent.getIntExtra("playingPosition", 0);
 
 
-        Log.d("indexing", "recieving " + currentSongPosition);
+//        Log.d("indexing", "recieving " + currentSongPosition);
 
         updateUI();
 
@@ -59,7 +59,7 @@ public class CurrentView extends AppCompatActivity {
         currentViewSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
+//                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
                 currentViewImage.setRotation((float) 0.01 * MyPlayer.mediaPlayer.getCurrentPosition());
 
 
@@ -73,7 +73,8 @@ public class CurrentView extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
-                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
+//                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
+               if(MyPlayer.mediaPlayer!=null)
                 MyPlayer.mediaPlayer.seekTo(seekBar.getProgress());
             }
         });
