@@ -43,7 +43,6 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
 //            songInfo = view.findViewById(R.id.songInfo);
             playlistName = view.findViewById(R.id.playlistName);
 
-
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -82,12 +81,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
         Log.d("playing", localDataSet.get(position).getName());
 
         holder.playlistName.setText(localDataSet.get(position).getName());
-//        holder.songInfo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(view.getContext(), localDataSet.get(position).getName() + " " + position, Toast.LENGTH_SHORT).show();
-//            }
-//        });
+
 
     }
 

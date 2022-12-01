@@ -45,15 +45,14 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ImageView showOptions;
     public static ImageView prev, play_pause, next;
-
     public static TextView currSong;
-    //    public static ArrayList<Song> mySongs;
     public static ArrayList<Playlist> myPlaylists;
     public static MyPlayer myPlayer;
     static Thread updateSeekBar;
     static SeekBar seekBar;
     public static int frame;
     TextView viewHomePage, viewPlaylists;
+
     public static int HOMEPAGE_CODE = 2001;
     public static int PLAYLIST_PAGE_CODE = 2002;
     public static int CurrentFragment = HOMEPAGE_CODE;
@@ -77,25 +76,12 @@ public class MainActivity extends AppCompatActivity {
         myPlayer = new MyPlayer(getApplicationContext());
 
 
-//        mySongs = MyPlayer.currPlayingPlaylist;
         myPlaylists = myPlayer.handler.allPlaylists();
 
-
-//        for (int i = 0; i < mySongs.size(); i++) {
-//            Log.d("mysong", mySongs.get(i).getName() + " " + mySongs.get(i).getId());
-//        }
-//        for (int i = 0; i < myPlaylists.size(); i++) {
-//            Log.d("myPlaylist", myPlaylists.get(i).toString());
-//        }
-
-
-//        Log.d("mysong", "starting " + mySongs.size());
-
         FragmentManager fm = getSupportFragmentManager();
-
-
         frame = R.id.HomepageFrame;
         FragmentTransaction ft = fm.beginTransaction();
+
 
         ft.replace(frame, new HomepageFragment());
         ft.commit();

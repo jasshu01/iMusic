@@ -53,7 +53,7 @@ public class PlaylistSongsFragment extends Fragment {
         playlistSongPlayButton = view.findViewById(R.id.playlistSongPlayButton);
         playlistSongsName = view.findViewById(R.id.playlistSongsName);
         playlistSongsRecyclerView = view.findViewById(R.id.playlistSongsRecyclerView);
-
+playlistSongsName.setText(playlist.getName());
         ArrayList<Song> playlistSongs = new ArrayList<>();
 
         for (Integer i :
