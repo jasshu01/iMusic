@@ -1,5 +1,7 @@
 package com.example.imusic;
 
+import static com.example.imusic.MainActivity.frame;
+
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.util.Log;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.IOException;
@@ -39,21 +43,18 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
 //            songInfo = view.findViewById(R.id.songInfo);
             playlistName = view.findViewById(R.id.playlistName);
 
+
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
 
-                    Toast.makeText(songImage.getContext(), localDataSet.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
-//                    try {
-//
-//                        MyPlayer.PlayMusic(localDataSet.get(getAdapterPosition()));
-//
-//                        MainActivity.updateUI();
-//
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
+                    Toast.makeText(view.getContext(), localDataSet.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
+
+                    FragmentTransaction ft = ((AppCompatActivity) view.getContext()).getSupportFragmentManager().beginTransaction();
+                    ft.replace(frame, new PlaylistSongsFragment(localDataSet.get(getAdapterPosition())));
+                    ft.commit();
+
                 }
             });
 
