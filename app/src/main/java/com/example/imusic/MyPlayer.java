@@ -178,6 +178,8 @@ public class MyPlayer {
 
         currSongPlaying = song;
 
+        MainActivity.updateUI();
+
 
         createNotification(true);
 
@@ -202,7 +204,7 @@ public class MyPlayer {
 
     public static void createNotification(boolean playing) {
 
-        Log.d("currently"," "+playing);
+        Log.d("currently", " " + playing);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CONTROLLER_CHANNEL_ID, "iMusic Notification Channel", NotificationManager.IMPORTANCE_HIGH);
