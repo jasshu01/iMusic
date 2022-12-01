@@ -27,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     public static MyPlayer myPlayer;
     static Thread updateSeekBar;
     static SeekBar seekBar;
+    public static int frame;
+    TextView viewHomePage, viewPlaylists;
 
 
     @SuppressLint("MissingInflatedId")
@@ -91,11 +94,38 @@ public class MainActivity extends AppCompatActivity {
 
 
         FragmentManager fm = getSupportFragmentManager();
+
+
+        frame = R.id.HomepageFrame;
         FragmentTransaction ft = fm.beginTransaction();
 
-
-        ft.replace(R.id.HomepageFrame, new HomepageFragment());
+        ft.replace(frame, new HomepageFragment());
         ft.commit();
+
+
+        viewHomePage = findViewById(R.id.viewHomePage);
+        viewPlaylists = findViewById(R.id.viewPlaylists);
+
+
+        viewHomePage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = fm.beginTransaction();
+
+                ft.replace(frame, new HomepageFragment());
+                ft.commit();
+            }
+        });
+
+        viewPlaylists.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentTransaction ft = fm.beginTransaction();
+
+                ft.replace(frame, new PlaylistsFragment());
+                ft.commit();
+            }
+        });
 
 
         play_pause.setImageResource(R.drawable.play_button);
