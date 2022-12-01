@@ -1,24 +1,21 @@
 package com.example.imusic;
 
+import static java.lang.Thread.sleep;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -27,19 +24,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -52,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     static SeekBar seekBar;
     public static int frame;
     TextView viewHomePage, viewPlaylists;
+
 
     public static int HOMEPAGE_CODE = 2001;
     public static int PLAYLIST_PAGE_CODE = 2002;
@@ -70,6 +63,36 @@ public class MainActivity extends AppCompatActivity {
         seekBar = findViewById(R.id.seekBar2);
         currSong = findViewById(R.id.currSong);
         showOptions = findViewById(R.id.showOptions);
+
+
+        new Thread() {
+            int i = 0;
+
+            public void run() {
+                while (i < 10) {
+
+
+                    i++;
+                    int finalI = i;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d("running", " " + finalI);
+                            currSong.setText("currently Playing" + " " + finalI);
+                        }
+
+                    });
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+        }.start();
 
 
         currSong.setText("Play Music");
