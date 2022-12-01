@@ -20,6 +20,16 @@ public class Song {
 
     int id;
 
+    @Override
+    public String toString() {
+        return "Song{" +
+                "image=" + image +
+                ", file=" + file +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
+
     public String getName() {
         return name;
     }

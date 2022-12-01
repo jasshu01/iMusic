@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         myPlayer = new MyPlayer(getApplicationContext());
 
 
-        mySongs = myPlayer.getAll_MP3_Files();
+        mySongs = MyPlayer.currPlayingPlaylist;
         myPlaylists = myPlayer.handler.allPlaylists();
 
 
@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
 
 
             }
@@ -145,8 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
-                Log.d("currSong", MyPlayer.currSongPlaying.getName() + " " + MyPlayer.mediaPlayer.getCurrentPosition() + " " + seekBar.getMax());
                 MyPlayer.mediaPlayer.seekTo(seekBar.getProgress());
             }
         });
@@ -322,50 +319,61 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         if (MyPlayer.currSongPlaying.getName() != null) {
-            currSong.setText(myPlayer.currSongPlaying.getName());
+            currSong.setText(MyPlayer.currSongPlaying.getName());
         }
         updateUI();
     }
 
     public static void nextSong() throws IOException {
-        int currIndex = mySongs.indexOf(myPlayer.currSongPlaying);
-        Log.d("indexing", "curr " + currIndex);
+        if (MyPlayer.currSongPlaying.getName() == null)
+            return;
+//
+//        Log.d("indexing1", MyPlayer.currSongPlaying.toString());
+//
+//        for (Song song :
+//                MyPlayer.currPlayingPlaylist) {
+//            Log.d("indexing1", song.toString());
+//        }
+//
+//        int currIndex = MyPlayer.currPlayingPlaylist.indexOf(MyPlayer.currSongPlaying);
+
+        int currIndex = MyPlayer.findCurrSongPosition();
+        Log.d("indexing1", "curr " + currIndex);
         int newIndex = currIndex + 1;
-        if (newIndex == mySongs.size()) {
+        if (newIndex == MyPlayer.currPlayingPlaylist.size()) {
             newIndex = 0;
         }
 
-        MyPlayer.PlayMusic(mySongs.get(newIndex));
-        currSong.setText(myPlayer.currSongPlaying.getName());
+        MyPlayer.PlayMusic(MyPlayer.currPlayingPlaylist.get(newIndex));
+        currSong.setText(MyPlayer.currSongPlaying.getName());
         updateUI();
     }
 
     public void prevSong() throws IOException {
-        int currIndex = mySongs.indexOf(MyPlayer.currSongPlaying);
+
+        if (MyPlayer.currSongPlaying.getName() == null)
+            return;
+        int currIndex = MyPlayer.findCurrSongPosition();
 
         Log.d("indexing", "curr " + currIndex);
         int newIndex = currIndex - 1;
         if (newIndex == -1) {
-            newIndex = mySongs.size() - 1;
+            newIndex = MyPlayer.currPlayingPlaylist.size() - 1;
         }
-        MyPlayer.PlayMusic(mySongs.get(newIndex));
-        currSong.setText(myPlayer.currSongPlaying.getName());
+        MyPlayer.PlayMusic(MyPlayer.currPlayingPlaylist.get(newIndex));
+        currSong.setText(MyPlayer.currSongPlaying.getName());
         updateUI();
     }
 
 
     public static void updateUI() {
-//        currentViewImage.setImageBitmap(song.getImage());
 
         if (myPlayer.currSongPlaying.getName() != null) {
             currSong.setText(myPlayer.currSongPlaying.getName());
         } else {
             currSong.setText("Play Music");
-//            seekBar.setVisibility(View.GONE);
             return;
         }
-
-//        seekBar.setVisibility(View.VISIBLE);
 
         currSong.setText(myPlayer.currSongPlaying.getName());
         seekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
@@ -390,10 +398,10 @@ public class MainActivity extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
+
 
                 }
-                Log.d("currSong", "playing " + MyPlayer.mediaPlayer.isPlaying());
+
 
             }
         };

@@ -48,12 +48,23 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.View
                 @Override
                 public void onClick(View view) {
 
+                    ArrayList<Song> playlistSongs = new ArrayList<>();
+
+                    for (Integer i :
+                            localDataSet.get(getAdapterPosition()).getSongIDs()) {
+                        playlistSongs.add(MyPlayer.handler.getSongFromId(i));
+                    }
+
+                    MyPlayer.currPlayingPlaylist = playlistSongs;
+                    Log.d("indexing1", "updating playlist");
+
 
                     Toast.makeText(view.getContext(), localDataSet.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
 
                     FragmentTransaction ft = ((AppCompatActivity) view.getContext()).getSupportFragmentManager().beginTransaction();
                     ft.replace(frame, new PlaylistSongsFragment(localDataSet.get(getAdapterPosition())));
                     ft.commit();
+
 
                 }
             });

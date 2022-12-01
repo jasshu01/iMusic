@@ -34,8 +34,8 @@ public class HomepageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
-        recyclerView=view.findViewById(R.id.SongListrecyclerView);
-        SongsAdapter songsAdapter = new SongsAdapter(mySongs);
+        recyclerView = view.findViewById(R.id.SongListrecyclerView);
+        SongsAdapter songsAdapter = new SongsAdapter(MyPlayer.all_MP3_Files);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(songsAdapter);
 

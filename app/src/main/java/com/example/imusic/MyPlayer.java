@@ -32,10 +32,12 @@ public class MyPlayer {
     public static Song currSongPlaying = new Song();
     public static dbHandler handler;
 
+    public static ArrayList<Song> currPlayingPlaylist = new ArrayList<>();
+
     public MyPlayer(Context context) {
         this.context = context;
         handler = new dbHandler(context, "iMusic", null, 1);
-
+        getAll_MP3_Files();
         handler.allPlaylists();
     }
 
@@ -63,7 +65,7 @@ public class MyPlayer {
             }
         }
 
-
+        currPlayingPlaylist = all_MP3_Files;
         return all_MP3_Files;
     }
 
@@ -169,5 +171,15 @@ public class MyPlayer {
             songPosition = mediaPlayer.getCurrentPosition();
 
         }
+    }
+
+    public static int findCurrSongPosition() {
+        int pos = -1;
+
+        for (int i = 0; i < currPlayingPlaylist.size(); i++) {
+            if (currPlayingPlaylist.get(i).getId() == currSongPlaying.getId())
+                return i;
+        }
+        return pos;
     }
 }

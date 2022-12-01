@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -28,9 +30,12 @@ public class PlaylistSongsFragment extends Fragment {
 
     Playlist playlist;
 
+    public PlaylistSongsFragment() {
+
+    }
+
     public PlaylistSongsFragment(Playlist playlist) {
-        // Required empty public constructor
-        this.playlist=playlist;
+        this.playlist = playlist;
     }
 
     @Override
@@ -43,13 +48,13 @@ public class PlaylistSongsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_playlist_songs, container, false);
-        playlistSongImage=view.findViewById(R.id.playlistSongImage);
-        playlistSongPlayButton=view.findViewById(R.id.playlistSongPlayButton);
-        playlistSongsName=view.findViewById(R.id.playlistSongsName);
-        playlistSongsRecyclerView=view.findViewById(R.id.playlistSongsRecyclerView);
+        View view = inflater.inflate(R.layout.fragment_playlist_songs, container, false);
+        playlistSongImage = view.findViewById(R.id.playlistSongImage);
+        playlistSongPlayButton = view.findViewById(R.id.playlistSongPlayButton);
+        playlistSongsName = view.findViewById(R.id.playlistSongsName);
+        playlistSongsRecyclerView = view.findViewById(R.id.playlistSongsRecyclerView);
 
-        ArrayList<Song> playlistSongs=new ArrayList<>();
+        ArrayList<Song> playlistSongs = new ArrayList<>();
 
         for (Integer i :
                 playlist.getSongIDs()) {
@@ -61,6 +66,17 @@ public class PlaylistSongsFragment extends Fragment {
         playlistSongsRecyclerView.setAdapter(songsAdapter);
 
 
+        playlistSongPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    MyPlayer.PlayMusic(MyPlayer.currPlayingPlaylist.get(0));
+                    MainActivity.updateUI();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
 
         return view;
