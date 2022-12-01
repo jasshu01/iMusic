@@ -1,6 +1,6 @@
 package com.example.imusic;
 
-import static com.example.imusic.MainActivity.mySongs;
+//import static com.example.imusic.MainActivity.mySongs;
 
 import android.os.Bundle;
 
@@ -19,6 +19,7 @@ public class HomepageFragment extends Fragment {
 
     public HomepageFragment() {
         // Required empty public constructor
+
     }
 
 
@@ -35,6 +36,7 @@ public class HomepageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_homepage, container, false);
 
         recyclerView = view.findViewById(R.id.SongListrecyclerView);
+//        MyPlayer.currPlayingPlaylist = MyPlayer.all_MP3_Files;
         SongsAdapter songsAdapter = new SongsAdapter(MyPlayer.all_MP3_Files);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(songsAdapter);

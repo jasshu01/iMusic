@@ -47,14 +47,16 @@ public class MainActivity extends AppCompatActivity {
     public static ImageView prev, play_pause, next;
 
     public static TextView currSong;
-    public static ArrayList<Song> mySongs;
+    //    public static ArrayList<Song> mySongs;
     public static ArrayList<Playlist> myPlaylists;
     public static MyPlayer myPlayer;
     static Thread updateSeekBar;
     static SeekBar seekBar;
     public static int frame;
     TextView viewHomePage, viewPlaylists;
-
+    public static int HOMEPAGE_CODE = 2001;
+    public static int PLAYLIST_PAGE_CODE = 2002;
+    public static int CurrentFragment = HOMEPAGE_CODE;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -75,23 +77,19 @@ public class MainActivity extends AppCompatActivity {
         myPlayer = new MyPlayer(getApplicationContext());
 
 
-        mySongs = MyPlayer.currPlayingPlaylist;
+//        mySongs = MyPlayer.currPlayingPlaylist;
         myPlaylists = myPlayer.handler.allPlaylists();
 
 
-        for (int i = 0; i < mySongs.size(); i++) {
-            Log.d("mysong", mySongs.get(i).getName() + " " + mySongs.get(i).getId());
-        }
-        for (int i = 0; i < myPlaylists.size(); i++) {
-            Log.d("myPlaylist", myPlaylists.get(i).toString());
-        }
+//        for (int i = 0; i < mySongs.size(); i++) {
+//            Log.d("mysong", mySongs.get(i).getName() + " " + mySongs.get(i).getId());
+//        }
+//        for (int i = 0; i < myPlaylists.size(); i++) {
+//            Log.d("myPlaylist", myPlaylists.get(i).toString());
+//        }
 
 
-        Log.d("mysong", "starting " + mySongs.size());
-//        SongsAdapter songsAdapter = new SongsAdapter(mySongs);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setAdapter(songsAdapter);
-
+//        Log.d("mysong", "starting " + mySongs.size());
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -110,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         viewHomePage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CurrentFragment = HOMEPAGE_CODE;
                 FragmentTransaction ft = fm.beginTransaction();
 
                 ft.replace(frame, new HomepageFragment());
@@ -120,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         viewPlaylists.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CurrentFragment = PLAYLIST_PAGE_CODE;
                 FragmentTransaction ft = fm.beginTransaction();
 
                 ft.replace(frame, new PlaylistsFragment());
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (MyPlayer.currSongPlaying.getName() != null) {
                     Intent intent = new Intent(MainActivity.this, CurrentView.class);
-                    intent.putExtra("playingPosition", mySongs.indexOf(myPlayer.currSongPlaying));
+                    intent.putExtra("playingPosition", MyPlayer.findCurrSongPosition());
 
                     MyActivityResultLauncher.launch(intent);
 

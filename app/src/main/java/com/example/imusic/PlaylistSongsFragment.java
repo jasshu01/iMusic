@@ -1,6 +1,6 @@
 package com.example.imusic;
 
-import static com.example.imusic.MainActivity.mySongs;
+//import static com.example.imusic.MainActivity.mySongs;
 
 import android.os.Bundle;
 

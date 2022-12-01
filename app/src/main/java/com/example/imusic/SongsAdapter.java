@@ -11,6 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.ByteArrayOutputStream;
@@ -22,8 +26,8 @@ import java.util.ArrayList;
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> {
 
 
-    public static boolean isSelectMode=false;
-    public static ArrayList<Integer> selectedSongs=new ArrayList<>();
+    public static boolean isSelectMode = false;
+    public static ArrayList<Integer> selectedSongs = new ArrayList<>();
     ArrayList<Song> localDataSet = new ArrayList<>();
 
 
@@ -69,8 +73,18 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     Toast.makeText(songImage.getContext(), localDataSet.get(getAdapterPosition()).getName(), Toast.LENGTH_SHORT).show();
                     try {
 
-                        MyPlayer.PlayMusic(localDataSet.get(getAdapterPosition()));
 
+                        if (MainActivity.CurrentFragment == MainActivity.HOMEPAGE_CODE) {
+                            MyPlayer.currPlayingPlaylist = MyPlayer.all_MP3_Files;
+
+                            Log.d("indexing1","updating playlist with all songs ");
+                        }
+                        else{
+                            Log.d("indexing1","updating playlist with local dataset");
+                            MyPlayer.currPlayingPlaylist = localDataSet;
+                        }
+
+                        MyPlayer.PlayMusic(localDataSet.get(getAdapterPosition()));
                         MainActivity.updateUI();
 
                     } catch (IOException e) {
@@ -83,6 +97,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
             view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+
 
                     isSelectMode = true;
                     Log.d("selecting multiple", "onLongClick:0  " + getAdapterPosition());

@@ -44,8 +44,7 @@ public class CurrentView extends AppCompatActivity {
         currentViewSeekBar = findViewById(R.id.currentViewSeekBar);
 
 
-        mySongs = MainActivity.mySongs;
-
+        mySongs = MyPlayer.currPlayingPlaylist;
 
         Intent intent = getIntent();
         int currentSongPosition = intent.getIntExtra("playingPosition", 0);
@@ -172,7 +171,7 @@ public class CurrentView extends AppCompatActivity {
 
 
     public void nextSong() throws IOException {
-        int currIndex = mySongs.indexOf(MyPlayer.currSongPlaying);
+        int currIndex = MyPlayer.findCurrSongPosition();
         Log.d("indexing", "curr " + currIndex);
         int newIndex = currIndex + 1;
         if (newIndex == mySongs.size()) {
@@ -183,7 +182,7 @@ public class CurrentView extends AppCompatActivity {
     }
 
     public void prevSong() throws IOException {
-        int currIndex = mySongs.indexOf(MyPlayer.currSongPlaying);
+        int currIndex = MyPlayer.findCurrSongPosition();
         Log.d("indexing", "curr " + currIndex);
         int newIndex = currIndex - 1;
         if (newIndex == -1) {
