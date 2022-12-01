@@ -51,6 +51,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                 @Override
                 public void onClick(View view) {
 
+
                     Log.d("selecting multiple", "onClick:2  " + selectedSongs.toString());
                     if (isSelectMode) {
                         if (selectedSongs.contains(Integer.valueOf(localDataSet.get(getAdapterPosition()).getId()))) {
