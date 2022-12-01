@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class dbHandler extends SQLiteOpenHelper {
 
@@ -201,6 +204,7 @@ public class dbHandler extends SQLiteOpenHelper {
 
         ArrayList<Integer> playlistSongsIndexes = playlist.getSongIDs();
 
+        Collections.sort(playlistSongsIndexes);
 
         contentValues.put("PLAYLIST_SONGS", playlistSongsIndexes.toString());
 

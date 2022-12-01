@@ -5,6 +5,9 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static TextView currSong;
     public static ArrayList<Song> mySongs;
+    public static ArrayList<Playlist> myPlaylists;
     public static MyPlayer myPlayer;
     static Thread updateSeekBar;
     static SeekBar seekBar;
@@ -68,18 +72,31 @@ public class MainActivity extends AppCompatActivity {
         myPlayer = new MyPlayer(getApplicationContext());
 
 
-
         mySongs = myPlayer.getAll_MP3_Files();
+        myPlaylists = myPlayer.handler.allPlaylists();
+
 
         for (int i = 0; i < mySongs.size(); i++) {
             Log.d("mysong", mySongs.get(i).getName() + " " + mySongs.get(i).getId());
         }
+        for (int i = 0; i < myPlaylists.size(); i++) {
+            Log.d("myPlaylist", myPlaylists.get(i).toString());
+        }
 
 
         Log.d("mysong", "starting " + mySongs.size());
-        SongsAdapter songsAdapter = new SongsAdapter(mySongs);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(songsAdapter);
+//        SongsAdapter songsAdapter = new SongsAdapter(mySongs);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setAdapter(songsAdapter);
+
+
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+
+
+        ft.replace(R.id.HomepageFrame, new HomepageFragment());
+        ft.commit();
+
 
         play_pause.setImageResource(R.drawable.play_button);
 

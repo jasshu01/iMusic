@@ -7,21 +7,52 @@
     android:visibility="visible"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/viewPlaylists"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
 
+    <LinearLayout
+        android:id="@+id/linearLayoutTextViews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#BBC897"
-        android:paddingLeft="30dp"
-        android:text="Playlists"
-        android:textSize="20sp"
-        android:textStyle="bold|italic"
+
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/viewAllSongs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:background="#BBC897"
+            android:paddingLeft="30dp"
+            android:text="HomePage"
+            android:textSize="20sp"
+
+            android:textStyle="bold|italic"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/viewPlaylists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_weight="1"
+            android:background="#BBC897"
+            android:gravity="end"
+            android:paddingEnd="30dp"
+            android:text="Playlists"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintHorizontal_bias="0.885"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout4"
@@ -33,7 +64,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SongListrecyclerView"
+        app:layout_constraintTop_toBottomOf="@+id/HomepageFrame"
         app:layout_constraintVertical_bias="1.0">
 
         <SeekBar
@@ -130,19 +161,33 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/SongListrecyclerView"
+    <FrameLayout
+        android:id="@+id/HomepageFrame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#BBC897"
-
-        android:padding="5dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewPlaylists">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutTextViews">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        >
+
+    </FrameLayout>
+
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/SongListrecyclerView"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        android:background="#BBC897"-->
+
+    <!--        android:padding="5dp"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.5"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/viewPlaylists">-->
+
+    <!--    </androidx.recyclerview.widget.RecyclerView>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
