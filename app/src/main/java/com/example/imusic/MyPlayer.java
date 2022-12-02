@@ -249,6 +249,7 @@ public class MyPlayer {
             songPosition = mediaPlayer.getCurrentPosition();
 
             createNotification(false);
+            MainActivity.updateUI();
         }
     }
 
