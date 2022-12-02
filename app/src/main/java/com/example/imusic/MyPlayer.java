@@ -178,7 +178,10 @@ public class MyPlayer {
 
         currSongPlaying = song;
 
-        MainActivity.updateUI();
+//        MainActivity.updateUI();
+//
+//        if (CurrentView.currentViewImage != null)
+//            CurrentView.updateUI();
 
 
         createNotification(true);
@@ -238,6 +241,11 @@ public class MyPlayer {
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.notify(NOTIFICATION_ID, builder.build());
 
+
+        MainActivity.updateUI();
+        if (CurrentView.currentViewImage != null)
+            CurrentView.updateUI();
+
     }
 
     public static void pauseMusic() {
@@ -249,7 +257,12 @@ public class MyPlayer {
             songPosition = mediaPlayer.getCurrentPosition();
 
             createNotification(false);
-            MainActivity.updateUI();
+//            MainActivity.updateUI();
+//
+//            if (CurrentView.currentViewImage != null)
+//                CurrentView.updateUI();
+
+
         }
     }
 

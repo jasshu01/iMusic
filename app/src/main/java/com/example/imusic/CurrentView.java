@@ -19,17 +19,17 @@ import java.util.ArrayList;
 
 public class CurrentView extends AppCompatActivity {
 
-    TextView currentViewName;
-    ImageView currentViewImage;
+    static TextView currentViewName;
+    static ImageView currentViewImage;
     ImageView currentViewPrev;
-    ImageView currentViewPlayPause;
+    static ImageView currentViewPlayPause;
     ImageView currentViewNext;
-    SeekBar currentViewSeekBar;
+    static SeekBar currentViewSeekBar;
 
 
-    Thread updateSeekBar;
+    static Thread updateSeekBar;
 
-    ArrayList<Song> mySongs;
+//    ArrayList<Song> mySongs;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -44,7 +44,7 @@ public class CurrentView extends AppCompatActivity {
         currentViewSeekBar = findViewById(R.id.currentViewSeekBar);
 
 
-        mySongs = MyPlayer.currPlayingPlaylist;
+//        mySongs = MyPlayer.currPlayingPlaylist;
 
         Intent intent = getIntent();
         int currentSongPosition = intent.getIntExtra("playingPosition", 0);
@@ -124,7 +124,7 @@ public class CurrentView extends AppCompatActivity {
 
     }
 
-    public void updateUI() {
+    public static void updateUI() {
         currentViewImage.setImageBitmap(MyPlayer.currSongPlaying.getImage());
 
 
@@ -143,6 +143,7 @@ public class CurrentView extends AppCompatActivity {
             @Override
             public void run() {
                 while (MyPlayer.mediaPlayer.getCurrentPosition() + 1000 < MyPlayer.mediaPlayer.getDuration()) {
+
 
                     currentViewSeekBar.setProgress(MyPlayer.mediaPlayer.getCurrentPosition());
                     try {
@@ -170,14 +171,14 @@ public class CurrentView extends AppCompatActivity {
     }
 
 
-    public void nextSong() throws IOException {
+    public static void nextSong() throws IOException {
         int currIndex = MyPlayer.findCurrSongPosition();
         Log.d("indexing", "curr " + currIndex);
         int newIndex = currIndex + 1;
-        if (newIndex == mySongs.size()) {
+        if (newIndex == MyPlayer.currPlayingPlaylist.size()) {
             newIndex = 0;
         }
-        MyPlayer.PlayMusic(mySongs.get(newIndex));
+        MyPlayer.PlayMusic(MyPlayer.currPlayingPlaylist.get(newIndex));
         updateUI();
     }
 
@@ -186,9 +187,9 @@ public class CurrentView extends AppCompatActivity {
         Log.d("indexing", "curr " + currIndex);
         int newIndex = currIndex - 1;
         if (newIndex == -1) {
-            newIndex = mySongs.size() - 1;
+            newIndex = MyPlayer.currPlayingPlaylist.size() - 1;
         }
-        MyPlayer.PlayMusic(mySongs.get(newIndex));
+        MyPlayer.PlayMusic(MyPlayer.currPlayingPlaylist.get(newIndex));
         updateUI();
     }
 
