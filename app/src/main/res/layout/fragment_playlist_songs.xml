@@ -11,60 +11,78 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/playlistSongImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/music"
-            app:layout_constraintBottom_toTopOf="@+id/playlistSongsRecyclerView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.207"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.2" />
 
-        <TextView
-            android:id="@+id/playlistSongsName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:text="Playlist Name"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/playlistSongImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/playlistSongImage"
-            app:layout_constraintTop_toTopOf="@+id/playlistSongImage" />
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/playlistSongsRecyclerView"
-            android:layout_width="409dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="1dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="1dp"
-            android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/playlistSongPlayButton"
-            app:layout_constraintVertical_bias="1.0" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                tools:ignore="MissingConstraints">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/playlistSongPlayButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:foregroundGravity="center_vertical|center|center_horizontal"
-            android:src="@drawable/play_button"
-            app:backgroundTint="#E71515"
-            app:fabCustomSize="80dp"
-            app:layout_constraintBottom_toBottomOf="@+id/playlistSongImage"
-            app:layout_constraintEnd_toEndOf="@+id/playlistSongImage"
-            app:layout_constraintHorizontal_bias="0.696"
-            app:layout_constraintStart_toEndOf="@+id/playlistSongImage"
-            app:layout_constraintTop_toBottomOf="@+id/playlistSongImage"
-            app:layout_constraintVertical_bias="0.66"
-            app:maxImageSize="60dp" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:id="@+id/playlistSongImage"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/music" />
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/playlistSongPlayButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:foregroundGravity="center_vertical|center|center_horizontal"
+                        android:src="@drawable/play_button"
+                        app:backgroundTint="#E71515"
+                        app:fabCustomSize="80dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/playlistSongImage"
+                        app:layout_constraintLeft_toRightOf="@+id/playlistSongImage"
+                        app:layout_constraintRight_toRightOf="@+id/playlistSongImage"
+                        app:layout_constraintTop_toBottomOf="@+id/playlistSongImage"
+                        app:maxImageSize="60dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <TextView
+                    android:id="@+id/playlistSongsName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    android:text="Playlist Name"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/playlistSongsRecyclerView"
+                android:layout_width="409dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="1dp"
+                android:padding="10dp"
+                app:layout_constraintVertical_bias="1.0" />
+
+        </LinearLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
