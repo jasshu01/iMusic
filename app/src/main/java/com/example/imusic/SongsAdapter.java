@@ -56,11 +56,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     if (isSelectMode) {
                         if (selectedSongs.contains(Integer.valueOf(localDataSet.get(getAdapterPosition()).getId()))) {
                             selectedSongs.remove(Integer.valueOf(localDataSet.get(getAdapterPosition()).getId()));
-                            view.setBackgroundColor(Color.TRANSPARENT);
+
+                            view.findViewById(R.id.songName).setBackgroundColor(Color.TRANSPARENT);
                         } else {
 
                             selectedSongs.add(Integer.valueOf(localDataSet.get(getAdapterPosition()).getId()));
-                            view.setBackgroundColor(Color.argb(122, 122, 122, 122));
+                            view.findViewById(R.id.songName).setBackgroundColor(Color.GRAY);
                         }
 
                         if (selectedSongs.size() == 0)
@@ -78,10 +79,9 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                         if (MainActivity.CurrentFragment == MainActivity.HOMEPAGE_CODE) {
                             MyPlayer.currPlayingPlaylist = MyPlayer.all_MP3_Files;
 
-                            Log.d("indexing1","updating playlist with all songs ");
-                        }
-                        else{
-                            Log.d("indexing1","updating playlist with local dataset");
+                            Log.d("indexing1", "updating playlist with all songs ");
+                        } else {
+                            Log.d("indexing1", "updating playlist with local dataset");
                             MyPlayer.currPlayingPlaylist = localDataSet;
                         }
 
@@ -104,10 +104,14 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
                     Log.d("selecting multiple", "onLongClick:0  " + getAdapterPosition());
                     if (selectedSongs.contains(Integer.valueOf(localDataSet.get(getAdapterPosition()).getId()))) {
                         selectedSongs.remove(Integer.valueOf(localDataSet.get(getAdapterPosition()).getId()));
-                        view.setBackgroundColor(Color.argb(222, 122, 122, 122));
+//                        view.setBackgroundColor(Color.argb(222, 122, 122, 122));
+                        view.findViewById(R.id.songName).setBackgroundColor(Color.TRANSPARENT);
                     } else {
                         selectedSongs.add(Integer.valueOf(localDataSet.get(getAdapterPosition()).getId()));
                         view.setBackgroundColor(Color.argb(122, 122, 122, 122));
+Log.d("selecting multiple","adding");
+                        view.findViewById(R.id.songName).setBackgroundColor(Color.GRAY);
+
                     }
 
                     if (selectedSongs.size() == 0)
