@@ -70,6 +70,7 @@ public class PlaylistSongsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
+                    MyPlayer.currPlayingPlaylist = playlistSongs;
                     MyPlayer.PlayMusic(MyPlayer.currPlayingPlaylist.get(0));
                     MainActivity.updateUI();
                 } catch (IOException e) {
